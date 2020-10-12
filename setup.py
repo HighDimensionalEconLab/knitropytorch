@@ -76,7 +76,6 @@ setup(
     tests_require=[
         'pytest',
         'pytest-cov',
-        'pre-commit',
     ],
     cmdclass={
         'dist': DistCommand,
