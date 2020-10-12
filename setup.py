@@ -8,7 +8,7 @@ from runpy import run_path
 from setuptools import find_packages, setup
 
 # read the program version from version.py (without loading the module)
-__version__ = run_path('src/knitropytorch/version.py')['__version__']
+__version__ = run_path("src/knitropytorch/version.py")["__version__"]
 
 
 def read(fname):
@@ -21,12 +21,15 @@ class DistCommand(Command):
     description = "build the distribution packages (in the 'dist' folder)"
     user_options = []
 
-    def initialize_options(self): pass
-    def finalize_options(self): pass
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
 
     def run(self):
-        if os.path.exists('build'):
-            shutil.rmtree('build')
+        if os.path.exists("build"):
+            shutil.rmtree("build")
         subprocess.run(["python", "setup.py", "sdist", "bdist_wheel"])
 
 
@@ -35,13 +38,17 @@ class TestCommand(Command):
     description = "run all tests with pytest"
     user_options = []
 
-    def initialize_options(self): pass
-    def finalize_options(self): pass
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
 
     def run(self):
-        sys.path.append('src')
+        sys.path.append("src")
         import pytest
-        return pytest.main(['tests', '--no-cov'])
+
+        return pytest.main(["tests", "--no-cov"])
 
 
 class TestCovCommand(Command):
@@ -49,15 +56,21 @@ class TestCovCommand(Command):
     description = "run all tests with pytest and write a test coverage report"
     user_options = []
 
-    def initialize_options(self): pass
-    def finalize_options(self): pass
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
 
     def run(self):
-        sys.path.append('src')
-        params = "tests --doctest-modules --junitxml=junit/test-results.xml " \
-                 "--cov=src --cov-report=xml --cov-report=html"
+        sys.path.append("src")
+        params = (
+            "tests --doctest-modules --junitxml=junit/test-results.xml "
+            "--cov=src --cov-report=xml --cov-report=html"
+        )
         import pytest
-        return pytest.main(params.split(' '))
+
+        return pytest.main(params.split(" "))
 
 
 setup(
@@ -70,18 +83,18 @@ setup(
     url="",
     packages=find_packages("src"),
     package_dir={"": "src"},
-    package_data={'knitropytorch': ['res/*']},
-    long_description=read('README.md'),
+    package_data={"knitropytorch": ["res/*"]},
+    long_description=read("README.md"),
     install_requires=[],
     tests_require=[
-        'pytest',
-        'pytest-cov',
+        "pytest",
+        "pytest-cov",
     ],
     cmdclass={
-        'dist': DistCommand,
-        'test': TestCommand,
-        'testcov': TestCovCommand,
+        "dist": DistCommand,
+        "test": TestCommand,
+        "testcov": TestCovCommand,
     },
-    platforms='any',
-    python_requires='>=3.7',
+    platforms="any",
+    python_requires=">=3.7",
 )
