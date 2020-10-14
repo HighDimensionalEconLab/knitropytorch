@@ -157,7 +157,10 @@ class PyTorchObjective:  # not (object), since that's implied in Python 3
             and (self.epoch_num % self.epoch_log_frequency == 0)
         ):
             self.log_epoch(
-                self.writer, self.model, self.data, self.epoch_num,
+                self.writer,
+                self.model,
+                self.data,
+                self.epoch_num,
             )
 
         return self.cached_fun
