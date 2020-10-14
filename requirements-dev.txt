@@ -5,3 +5,6 @@ black~=19.10b0
 pre-commit~=2.2.0
 pytest~=5.4.0
 pytest-cov~=2.8.0
+torch
+numpy 
+scipy
