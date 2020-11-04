@@ -79,6 +79,7 @@ class TestWrappers:
         # Evaluate nonlinear objective
         evalResult.obj = self.fun(x[0])
         return 0
+
     def test_eval_g(self, kc, cb, evalRequest, evalResult, userParams):
         if evalRequest.type != KN_RC_EVALGA:
             print ("*** callbackEvalGA incorrectly called with eval type %d" % evalRequest.type)
@@ -86,8 +87,9 @@ class TestWrappers:
         x = evalRequest.x
         print(x)
         # Evaluate nonlinear objective
-        evalResult.obj = self.grad(x[0])
+        evalResult.objGrad[0] = self.grad(x[0])
         return 0
+
     def fun(self, x):
         return x * x
     def grad(self, x):
@@ -101,7 +103,7 @@ def test_fake_class_knitro():
         quit ()
     KN_add_vars (kc, 1)
     fake_inst = TestWrappers()
-    # KN_set_var_primal_init_values (kc, xInitVals = [.5])
+    KN_set_var_primal_init_values (kc, xInitVals = [3])
     cb = KN_add_eval_callback(kc, evalObj = True, funcCallback = fake_inst.test_eval_f)
     KN_set_cb_grad (kc, cb, objGradIndexVars = KN_DENSE, gradCallback = fake_inst.test_eval_g)
     KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
