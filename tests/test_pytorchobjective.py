@@ -112,4 +112,41 @@ def test_fake_class_knitro():
     assert 1 == 1
 
 
+def test_knitro():
+    net = nn.Sequential(
+        OrderedDict(
+            [
+                ("fc1", nn.Linear(1, 2, bias=False)),
+                ("sigmoid", nn.Sigmoid()),
+                ("fc2", nn.Linear(2, 1)),
+            ]
+        )
+    )
+    with torch.no_grad():
+        net.fc1.weight[0][0] = 0.0
+        net.fc1.weight[1][0] = 0.0
+        net.fc2.weight[0][0] = 1.0
+        net.fc2.weight[0][1] = 1.0
+        net.fc2.bias[0] = 0.00
+
+    torchCGen = torch.random.manual_seed(1234) 
+    data = torch.rand(1000, 1)
+    data_loader = torch.utils.data.DataLoader(data)
+    obj = PyTorchObjective(loss, net, data_loader)
+
+    try:
+        kc = KN_new ()
+    except:
+        print ("Failed to find a valid license.")
+        quit ()
+    KN_add_vars (kc, 5)
+    KN_set_var_primal_init_values (kc, xInitVals = obj.x0)
+    cb = KN_add_eval_callback(kc, evalObj = True, funcCallback = obj.eval_f)
+    # KN_set_cb_grad (kc, cb, objGradIndexVars = KN_DENSE, gradCallback = obj.eval_g)
+    KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
+    nStatus = KN_solve (kc)
+
+    assert 1 == 1
+
 # test_fake_class_knitro()
+test_knitro()

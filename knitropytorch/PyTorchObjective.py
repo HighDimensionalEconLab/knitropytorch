@@ -1,4 +1,5 @@
 from itertools import cycle
+from knitro import *
 import torch  # torch.from_numpy
 import numpy as np
 from functools import (
@@ -174,3 +175,23 @@ class PyTorchObjective:  # not (object), since that's implied in Python 3
         if not self.grad_evaluated:
             self.evaluate_grad()
         return self.cached_grad
+
+    def eval_f(self, kc, cb, evalRequest, evalResult, userParams):
+        if evalRequest.type != KN_RC_EVALFC:
+            print("*** callbackEvalF incorrectly called with eval type %d" % evalRequest.type)
+            return -1
+        x = evalRequest.x
+        print(x)
+        # Evaluate nonlinear objective
+        evalResult.obj = self.fun(np.array(x))
+        return 0
+
+
+    def eval_g(self, kc, cb, evalRequest, evalResult, userParams):
+        if evalRequest.type != KN_RC_EVALGA:
+            print ("*** callbackEvalGA incorrectly called with eval type %d" % evalRequest.type)
+            return -1
+        x = evalRequest.x
+        # Evaluate nonlinear objective
+        evalResult.objGrad[0] = self.grad(np.array(x))
+        return 0
