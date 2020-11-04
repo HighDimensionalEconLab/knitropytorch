@@ -14,6 +14,13 @@ torch.set_default_dtype(torch.float64)
 
 from scipy.optimize import minimize
 
+from numpy.testing import (
+    assert_array_almost_equal,
+    assert_array_equal,
+    assert_almost_equal,
+    assert_equal,
+)
+
 a = 1.0
 b = 1.0
 c = 0.01
@@ -44,9 +51,16 @@ def test_pytorch_obj():
         net.fc2.weight[0][1] = 1.0
         net.fc2.bias[0] = 0.00
 
+    torchCGen = torch.random.manual_seed(1234) 
     data = torch.rand(1000, 1)
     data_loader = torch.utils.data.DataLoader(data)
     obj = PyTorchObjective(loss, net, data_loader)
     xL = minimize(obj.fun, obj.x0, method="BFGS", jac=obj.grad)
     obj.cache_argument(xL.x)
+
+    f_val = obj.fun(obj.x0)
+    grad_val = obj.grad(obj.x0)
+
+    assert_almost_equal(f_val, 0.3102050451060238)
+    assert_array_almost_equal(grad_val, [0.09091323, 0.09091323, 0.55696054, 0.55696054, 1.11392108])
     assert 1 == 1
