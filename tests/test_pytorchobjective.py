@@ -111,4 +111,5 @@ def test_fake_class_knitro():
 
     assert 1 == 1
 
-test_fake_class_knitro()
+
+# test_fake_class_knitro()
