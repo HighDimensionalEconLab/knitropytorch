@@ -53,7 +53,7 @@ def test_pytorch_obj():
         net.fc2.weight[0][1] = 1.0
         net.fc2.bias[0] = 0.00
 
-    torchCGen = torch.random.manual_seed(1234) 
+    torchCGen = torch.random.manual_seed(1234)
     data = torch.rand(1000, 1)
     data_loader = torch.utils.data.DataLoader(data)
     obj = PyTorchObjective(loss, net, data_loader)
@@ -64,25 +64,32 @@ def test_pytorch_obj():
     grad_val = obj.grad(obj.x0)
 
     assert_almost_equal(f_val, 0.3102050451060238)
-    assert_array_almost_equal(grad_val, [0.09091323, 0.09091323, 0.55696054, 0.55696054, 1.11392108])
+    assert_array_almost_equal(
+        grad_val, [0.09091323, 0.09091323, 0.55696054, 0.55696054, 1.11392108]
+    )
     assert 1 == 1
-
 
 
 class TestWrappers:
     def test_eval_f(self, kc, cb, evalRequest, evalResult, userParams):
         if evalRequest.type != KN_RC_EVALFC:
-            print("*** callbackEvalF incorrectly called with eval type %d" % evalRequest.type)
+            print(
+                "*** callbackEvalF incorrectly called with eval type %d"
+                % evalRequest.type
+            )
             return -1
         x = evalRequest.x
-        #here x is a list of size 1
+        # here x is a list of size 1
         # Evaluate nonlinear objective
         evalResult.obj = self.fun(x[0])
         return 0
 
     def test_eval_g(self, kc, cb, evalRequest, evalResult, userParams):
         if evalRequest.type != KN_RC_EVALGA:
-            print ("*** callbackEvalGA incorrectly called with eval type %d" % evalRequest.type)
+            print(
+                "*** callbackEvalGA incorrectly called with eval type %d"
+                % evalRequest.type
+            )
             return -1
         x = evalRequest.x
         print(x)
@@ -92,22 +99,34 @@ class TestWrappers:
 
     def fun(self, x):
         return x * x
+
     def grad(self, x):
         return 2 * x
 
+
 def test_fake_class_knitro():
     try:
-        kc = KN_new ()
+        kc = KN_new()
     except:
-        print ("Failed to find a valid license.")
-        quit ()
-    KN_add_vars (kc, 1)
+        print("Failed to find a valid license.")
+        quit()
+    KN_add_vars(kc, 1)
     fake_inst = TestWrappers()
+<<<<<<< HEAD
     KN_set_var_primal_init_values (kc, xInitVals = [3])
     cb = KN_add_eval_callback(kc, evalObj = True, funcCallback = fake_inst.test_eval_f)
     KN_set_cb_grad (kc, cb, objGradIndexVars = KN_DENSE, gradCallback = fake_inst.test_eval_g)
     KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
     nStatus = KN_solve (kc)
+=======
+    # KN_set_var_primal_init_values (kc, xInitVals = [.5])
+    cb = KN_add_eval_callback(kc, evalObj=True, funcCallback=fake_inst.test_eval_f)
+    KN_set_cb_grad(
+        kc, cb, objGradIndexVars=KN_DENSE, gradCallback=fake_inst.test_eval_g
+    )
+    KN_set_int_param(kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
+    nStatus = KN_solve(kc)
+>>>>>>> a576fcc2a0a73b0d6f74234b25909bbb93ffffde
 
     assert 1 == 1
 
