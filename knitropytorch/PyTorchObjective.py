@@ -178,7 +178,10 @@ class PyTorchObjective:  # not (object), since that's implied in Python 3
 
     def eval_f(self, kc, cb, evalRequest, evalResult, userParams):
         if evalRequest.type != KN_RC_EVALFC:
-            print("*** callbackEvalF incorrectly called with eval type %d" % evalRequest.type)
+            print(
+                "*** callbackEvalF incorrectly called with eval type %d"
+                % evalRequest.type
+            )
             return -1
         x = evalRequest.x
         print(x)
@@ -186,10 +189,12 @@ class PyTorchObjective:  # not (object), since that's implied in Python 3
         evalResult.obj = self.fun(np.array(x))
         return 0
 
-
     def eval_g(self, kc, cb, evalRequest, evalResult, userParams):
         if evalRequest.type != KN_RC_EVALGA:
-            print ("*** callbackEvalGA incorrectly called with eval type %d" % evalRequest.type)
+            print(
+                "*** callbackEvalGA incorrectly called with eval type %d"
+                % evalRequest.type
+            )
             return -1
         x = evalRequest.x
         # Evaluate nonlinear objective
