@@ -152,7 +152,7 @@ def test_knitro():
     obj = PyTorchObjective(loss, net, data_loader)
 
     try:
-        kc = KN_new ()
+        kc = KN_new()
     except:
         print ("Failed to find a valid license.")
         quit ()
@@ -167,7 +167,7 @@ def test_knitro():
     cb = KN_add_eval_callback(kc, evalObj = True, funcCallback = obj.eval_f)
     KN_set_cb_grad (kc, cb, objGradIndexVars = KN_DENSE, gradCallback = obj.eval_g)
     KN_set_obj_goal (kc, KN_OBJGOAL_MINIMIZE)
-    KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
+    # KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
     nStatus = KN_solve (kc)
 
     print(Solution(kc))
@@ -185,4 +185,4 @@ def test_knitro():
 
 # test_pytorch_obj()
 # # test_fake_class_knitro()
-test_knitro()
+# test_knitro()
