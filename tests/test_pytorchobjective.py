@@ -13,7 +13,7 @@ import numpy as np
 
 torch.set_default_dtype(torch.float64)
 
-from scipy.optimize import minimize
+from scipy.optimize import minimize, check_grad
 
 from numpy.testing import (
     assert_array_almost_equal,
@@ -56,10 +56,13 @@ def test_pytorch_obj():
 
     torchCGen = torch.random.manual_seed(1235)
     data = torch.rand(1000, 1)
-    data_loader = torch.utils.data.DataLoader(data)
+    data_loader = torch.utils.data.DataLoader(data, batch_size=1000)
     obj = PyTorchObjective(loss, net, data_loader)
     xL = minimize(obj.fun, obj.x0, method="BFGS", jac=obj.grad)
     obj.cache_argument(xL.x)
+
+    check_gradient = check_grad(obj.fun, obj.grad, obj.x0)
+    assert check_gradient < 1e-6
 
     print(xL)
     f_val = obj.fun(obj.x0)
@@ -146,9 +149,11 @@ def test_knitro():
         net.fc2.weight[0][1] = 1.0
         net.fc2.bias[0] = 0.00
 
+    print(torch.rand(10, 1))
+
     torchCGen = torch.random.manual_seed(1235) 
     data = torch.rand(1000, 1)
-    data_loader = torch.utils.data.DataLoader(data)
+    data_loader = torch.utils.data.DataLoader(data, batch_size=1000)
     obj = PyTorchObjective(loss, net, data_loader)
 
     try:
@@ -167,7 +172,7 @@ def test_knitro():
     cb = KN_add_eval_callback(kc, evalObj = True, funcCallback = obj.eval_f)
     KN_set_cb_grad (kc, cb, objGradIndexVars = KN_DENSE, gradCallback = obj.eval_g)
     KN_set_obj_goal (kc, KN_OBJGOAL_MINIMIZE)
-    # KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
+    KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_FIRST)
     nStatus = KN_solve (kc)
 
     print(Solution(kc))
