@@ -9,6 +9,7 @@ from knitropytorch import PyTorchObjective
 import torch
 import torch.nn as nn
 from collections import OrderedDict
+import numpy as np
 
 torch.set_default_dtype(torch.float64)
 
@@ -53,82 +54,79 @@ def test_pytorch_obj():
         net.fc2.weight[0][1] = 1.0
         net.fc2.bias[0] = 0.00
 
-    torchCGen = torch.random.manual_seed(1234)
+    torchCGen = torch.random.manual_seed(12345)
     data = torch.rand(1000, 1)
     data_loader = torch.utils.data.DataLoader(data)
     obj = PyTorchObjective(loss, net, data_loader)
     xL = minimize(obj.fun, obj.x0, method="BFGS", jac=obj.grad)
     obj.cache_argument(xL.x)
 
-    f_val = obj.fun(obj.x0)
-    grad_val = obj.grad(obj.x0)
+    print(xL)
+    # f_val = obj.fun(obj.x0)
+    # grad_val = obj.grad(obj.x0)
 
-    assert_almost_equal(f_val, 0.3102050451060238)
-    assert_array_almost_equal(
-        grad_val, [0.09091323, 0.09091323, 0.55696054, 0.55696054, 1.11392108]
-    )
+    print("minimizing the objective function is:", obj.fun(xL.x))
+
+    # print(grad_val)
+
+    # assert_almost_equal(f_val, 0.3102050451060238)
+    # assert_array_almost_equal(
+    #     grad_val, [0.09091323, 0.09091323, 0.55696054, 0.55696054, 1.11392108]
+    # )
     assert 1 == 1
 
 
-class TestWrappers:
-    def test_eval_f(self, kc, cb, evalRequest, evalResult, userParams):
-        if evalRequest.type != KN_RC_EVALFC:
-            print(
-                "*** callbackEvalF incorrectly called with eval type %d"
-                % evalRequest.type
-            )
-            return -1
-        x = evalRequest.x
-        # here x is a list of size 1
-        # Evaluate nonlinear objective
-        evalResult.obj = self.fun(x[0])
-        return 0
+# class TestWrappers:
+#     def test_eval_f(self, kc, cb, evalRequest, evalResult, userParams):
+#         if evalRequest.type != KN_RC_EVALFC:
+#             print(
+#                 "*** callbackEvalF incorrectly called with eval type %d"
+#                 % evalRequest.type
+#             )
+#             return -1
+#         x = evalRequest.x
+#         # here x is a list of size 1
+#         # Evaluate nonlinear objective
+#         evalResult.obj = self.fun(x[0])
+#         return 0
 
-    def test_eval_g(self, kc, cb, evalRequest, evalResult, userParams):
-        if evalRequest.type != KN_RC_EVALGA:
-            print(
-                "*** callbackEvalGA incorrectly called with eval type %d"
-                % evalRequest.type
-            )
-            return -1
-        x = evalRequest.x
-        print(x)
-        # Evaluate nonlinear objective
-        evalResult.objGrad[0] = self.grad(x[0])
-        return 0
+#     def test_eval_g(self, kc, cb, evalRequest, evalResult, userParams):
+#         if evalRequest.type != KN_RC_EVALGA:
+#             print(
+#                 "*** callbackEvalGA incorrectly called with eval type %d"
+#                 % evalRequest.type
+#             )
+#             return -1
+#         x = evalRequest.x
+#         print(x)
+#         # Evaluate nonlinear objective
+#         evalResult.objGrad[0] = self.grad(x[0])
+#         return 0
 
-    def fun(self, x):
-        return x * x
+#     def fun(self, x):
+#         return x * x
 
-    def grad(self, x):
-        return 2 * x
+#     def grad(self, x):
+#         return 2 * x
 
 
-def test_fake_class_knitro():
-    try:
-        kc = KN_new()
-    except:
-        print("Failed to find a valid license.")
-        quit()
-    KN_add_vars(kc, 1)
-    fake_inst = TestWrappers()
-<<<<<<< HEAD
-    KN_set_var_primal_init_values (kc, xInitVals = [3])
-    cb = KN_add_eval_callback(kc, evalObj = True, funcCallback = fake_inst.test_eval_f)
-    KN_set_cb_grad (kc, cb, objGradIndexVars = KN_DENSE, gradCallback = fake_inst.test_eval_g)
-    KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
-    nStatus = KN_solve (kc)
-=======
-    # KN_set_var_primal_init_values (kc, xInitVals = [.5])
-    cb = KN_add_eval_callback(kc, evalObj=True, funcCallback=fake_inst.test_eval_f)
-    KN_set_cb_grad(
-        kc, cb, objGradIndexVars=KN_DENSE, gradCallback=fake_inst.test_eval_g
-    )
-    KN_set_int_param(kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
-    nStatus = KN_solve(kc)
->>>>>>> a576fcc2a0a73b0d6f74234b25909bbb93ffffde
+# def test_fake_class_knitro():
+#     try:
+#         kc = KN_new()
+#     except:
+#         print("Failed to find a valid license.")
+#         quit()
+#     KN_add_vars(kc, 1)
+#     fake_inst = TestWrappers()
+#     # KN_set_var_primal_init_values (kc, xInitVals = [.5])
+#     cb = KN_add_eval_callback(kc, evalObj=True, funcCallback=fake_inst.test_eval_f)
+#     KN_set_cb_grad(
+#         kc, cb, objGradIndexVars=KN_DENSE, gradCallback=fake_inst.test_eval_g
+#     )
+#     KN_set_int_param(kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
+#     nStatus = KN_solve(kc)
 
-    assert 1 == 1
+#     assert 1 == 1
 
 
 def test_knitro():
@@ -148,7 +146,7 @@ def test_knitro():
         net.fc2.weight[0][1] = 1.0
         net.fc2.bias[0] = 0.00
 
-    torchCGen = torch.random.manual_seed(1234) 
+    torchCGen = torch.random.manual_seed(12345) 
     data = torch.rand(1000, 1)
     data_loader = torch.utils.data.DataLoader(data)
     obj = PyTorchObjective(loss, net, data_loader)
@@ -161,11 +159,30 @@ def test_knitro():
     KN_add_vars (kc, 5)
     KN_set_var_primal_init_values (kc, xInitVals = obj.x0)
     cb = KN_add_eval_callback(kc, evalObj = True, funcCallback = obj.eval_f)
-    # KN_set_cb_grad (kc, cb, objGradIndexVars = KN_DENSE, gradCallback = obj.eval_g)
-    KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
+    KN_set_cb_grad (kc, cb, objGradIndexVars = KN_DENSE, gradCallback = obj.eval_g)
+    KN_set_obj_goal (kc, KN_OBJGOAL_MINIMIZE)
+    # KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
+    # KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
     nStatus = KN_solve (kc)
 
-    assert 1 == 1
+    print(Solution(kc))
 
-# test_fake_class_knitro()
-test_knitro()
+    assert 1 == 1
+    
+    # print(obj.fun(np.array([-0.05037972, -0.05037972,  0.71964827,  0.71964827, -0.55942466])))
+    # obj.cache_argument(np.array([-0.013799221627639344, -0.013799221627639344, 0.8606748756170269, 0.8606748756170269, -0.278378617923651]))
+    # print(obj.fun(np.array([-0.013799221627639344, -0.013799221627639344, 0.8606748756170269, 0.8606748756170269, -0.278378617923651])))
+    
+    
+
+    sol = Solution(kc)
+
+    print("objective is", sol.obj)
+    print("x is", sol.x)
+
+    obj.cache_argument(np.array(sol.x))
+    KN_free (kc)
+
+# test_pytorch_obj()
+# # test_fake_class_knitro()
+# test_knitro()

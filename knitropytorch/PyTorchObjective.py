@@ -192,6 +192,7 @@ class PyTorchObjective:  # not (object), since that's implied in Python 3
             print ("*** callbackEvalGA incorrectly called with eval type %d" % evalRequest.type)
             return -1
         x = evalRequest.x
+        # print("input of x is ", x)
         # Evaluate nonlinear objective
-        evalResult.objGrad[0] = self.grad(np.array(x))
+        evalResult.objGrad = self.grad(np.array(x))
         return 0
