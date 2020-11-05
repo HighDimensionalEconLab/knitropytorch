@@ -1,4 +1,3 @@
-![.github/workflows/pytest.yml](https://github.com/HighDimensionalEconLab/knitropytorch/workflows/.github/workflows/pytest.yml/badge.svg)
 # knitropytorch
 Pytorch support for Knitro
 
