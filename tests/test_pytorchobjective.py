@@ -151,7 +151,7 @@ def test_knitro():
 
     print(torch.rand(10, 1))
 
-    torchCGen = torch.random.manual_seed(1235) 
+    torchCGen = torch.random.manual_seed(1235)
     data = torch.rand(1000, 1)
     data_loader = torch.utils.data.DataLoader(data, batch_size=1000)
     obj = PyTorchObjective(loss, net, data_loader)
@@ -169,11 +169,11 @@ def test_knitro():
     KN_set_var_primal_init_values(kc, xInitVals=obj.x0)
     # uncomment for the Rosenbrock function
     # KN_set_var_primal_init_values (kc, xInitVals = [5, 2])
-    cb = KN_add_eval_callback(kc, evalObj = True, funcCallback = obj.eval_f)
-    KN_set_cb_grad (kc, cb, objGradIndexVars = KN_DENSE, gradCallback = obj.eval_g)
-    KN_set_obj_goal (kc, KN_OBJGOAL_MINIMIZE)
-    KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_FIRST)
-    nStatus = KN_solve (kc)
+    cb = KN_add_eval_callback(kc, evalObj=True, funcCallback=obj.eval_f)
+    KN_set_cb_grad(kc, cb, objGradIndexVars=KN_DENSE, gradCallback=obj.eval_g)
+    KN_set_obj_goal(kc, KN_OBJGOAL_MINIMIZE)
+    KN_set_int_param(kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_FIRST)
+    nStatus = KN_solve(kc)
 
     print(Solution(kc))
 
