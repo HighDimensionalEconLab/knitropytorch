@@ -181,14 +181,16 @@ def test_knitro():
 
     sol = Solution(kc)
 
-    print("objective is", sol.obj)
-    print("x is", sol.x)
+    print(nStatus)
 
-    obj.cache_argument(np.array(sol.x))
-    print("knitro ans is:", obj.fun(np.array(sol.x)))
+    # print("objective is", sol.obj)
+    # print("x is", sol.x)
+
+    # obj.cache_argument(np.array(sol.x))
+    # print("knitro ans is:", obj.fun(np.array(sol.x)))
     KN_free(kc)
 
 
 # test_pytorch_obj()
 # # test_fake_class_knitro()
-# test_knitro()
+test_knitro()
