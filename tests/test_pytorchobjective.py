@@ -146,7 +146,7 @@ def test_knitro():
         net.fc2.weight[0][1] = 1.0
         net.fc2.bias[0] = 0.00
 
-    torchCGen = torch.random.manual_seed(1235) 
+    torchCGen = torch.random.manual_seed(1235)
     data = torch.rand(1000, 1)
     data_loader = torch.utils.data.DataLoader(data)
     obj = PyTorchObjective(loss, net, data_loader)
@@ -154,21 +154,21 @@ def test_knitro():
     try:
         kc = KN_new()
     except:
-        print ("Failed to find a valid license.")
-        quit ()
-    KN_add_vars (kc, 5)
+        print("Failed to find a valid license.")
+        quit()
+    KN_add_vars(kc, 5)
 
     # uncomment for the Rosenbrock function
     # KN_add_vars (kc, 2)
 
-    KN_set_var_primal_init_values (kc, xInitVals = obj.x0)
+    KN_set_var_primal_init_values(kc, xInitVals=obj.x0)
     # uncomment for the Rosenbrock function
     # KN_set_var_primal_init_values (kc, xInitVals = [5, 2])
-    cb = KN_add_eval_callback(kc, evalObj = True, funcCallback = obj.eval_f)
-    KN_set_cb_grad (kc, cb, objGradIndexVars = KN_DENSE, gradCallback = obj.eval_g)
-    KN_set_obj_goal (kc, KN_OBJGOAL_MINIMIZE)
+    cb = KN_add_eval_callback(kc, evalObj=True, funcCallback=obj.eval_f)
+    KN_set_cb_grad(kc, cb, objGradIndexVars=KN_DENSE, gradCallback=obj.eval_g)
+    KN_set_obj_goal(kc, KN_OBJGOAL_MINIMIZE)
     # KN_set_int_param (kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
-    nStatus = KN_solve (kc)
+    nStatus = KN_solve(kc)
 
     print(Solution(kc))
 
@@ -181,7 +181,8 @@ def test_knitro():
 
     obj.cache_argument(np.array(sol.x))
     print("knitro ans is:", obj.fun(np.array(sol.x)))
-    KN_free (kc)
+    KN_free(kc)
+
 
 # test_pytorch_obj()
 # # test_fake_class_knitro()
