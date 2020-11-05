@@ -148,7 +148,7 @@ def test_knitro():
 
     torchCGen = torch.random.manual_seed(1235)
     data = torch.rand(1000, 1)
-    data_loader = torch.utils.data.DataLoader(data)
+    data_loader = torch.utils.data.DataLoader(data, batch_size=1000)
     obj = PyTorchObjective(loss, net, data_loader)
 
     try:
