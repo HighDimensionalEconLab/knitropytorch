@@ -24,17 +24,17 @@ from numpy.testing import (
 
 from knitro import *
 
-a = 1.0
-b = 1.0
-c = 0.01
-
 
 def quadratic_function(X):
+    a = 1.0
+    b = 1.0
+    c = 0.01
     return a * (X ** 2) + b * X + c
 
 
 def loss(model, X):
-    return torch.sum((model(X) - quadratic_function(X)) ** 2) / len(X)
+    residuals = model(X) - quadratic_function(X)
+    return (residuals ** 2).sum() / len(residuals)
 
 
 def test_pytorch_obj():
@@ -159,14 +159,14 @@ def test_knitro():
     try:
         kc = KN_new()
     except:
-        print ("Failed to find a valid license.")
-        quit ()
-    KN_add_vars (kc, 5)
+        print("Failed to find a valid license.")
+        quit()
+    KN_add_vars(kc, 5)
 
     # uncomment for the Rosenbrock function
     # KN_add_vars (kc, 2)
 
-    KN_set_var_primal_init_values (kc, xInitVals = obj.x0)
+    KN_set_var_primal_init_values(kc, xInitVals=obj.x0)
     # uncomment for the Rosenbrock function
     # KN_set_var_primal_init_values (kc, xInitVals = [5, 2])
     cb = KN_add_eval_callback(kc, evalObj = True, funcCallback = obj.eval_f)
@@ -186,7 +186,8 @@ def test_knitro():
 
     obj.cache_argument(np.array(sol.x))
     print("knitro ans is:", obj.fun(np.array(sol.x)))
-    KN_free (kc)
+    KN_free(kc)
+
 
 # test_pytorch_obj()
 # # test_fake_class_knitro()
