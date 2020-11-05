@@ -24,17 +24,17 @@ from numpy.testing import (
 
 from knitro import *
 
-a = 1.0
-b = 1.0
-c = 0.01
-
 
 def quadratic_function(X):
+    a = 1.0
+    b = 1.0
+    c = 0.01
     return a * (X ** 2) + b * X + c
 
 
 def loss(model, X):
-    return torch.sum((model(X) - quadratic_function(X)) ** 2) / len(X)
+    residuals = model(X) - quadratic_function(X)
+    return (residuals ** 2).sum() / len(residuals)
 
 
 def test_pytorch_obj():
@@ -55,8 +55,8 @@ def test_pytorch_obj():
         net.fc2.bias[0] = 0.00
 
     torchCGen = torch.random.manual_seed(1235)
-    data = torch.rand(1000, 1)
-    data_loader = torch.utils.data.DataLoader(data)
+    data = torch.rand((1000, 1), dtype=torch.float64)
+    data_loader = torch.utils.data.DataLoader(data, batch_size=1000)
     obj = PyTorchObjective(loss, net, data_loader)
     xL = minimize(obj.fun, obj.x0, method="BFGS", jac=obj.grad)
     obj.cache_argument(xL.x)
