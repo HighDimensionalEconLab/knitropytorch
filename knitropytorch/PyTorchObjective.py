@@ -208,6 +208,33 @@ class PyTorchObjective:  # not (object), since that's implied in Python 3
         # evalResult.objGrad = self.test_grad(x)
         return 0
 
+
+    def eval_f_test(self, kc, cb, evalRequest, evalResult, userParams):
+        if evalRequest.type != KN_RC_EVALFC:
+            print(
+                "*** callbackEvalF incorrectly called with eval type %d"
+                % evalRequest.type
+            )
+            return -1
+        x = evalRequest.x
+
+        # Evaluating the Rosenbrock function
+        evalResult.obj = self.test_fun(x)
+        return 0
+
+    def eval_g_test(self, kc, cb, evalRequest, evalResult, userParams):
+        if evalRequest.type != KN_RC_EVALGA:
+            print(
+                "*** callbackEvalGA incorrectly called with eval type %d"
+                % evalRequest.type
+            )
+            return -1
+        x = evalRequest.x
+
+        # Evaluating the Rosenbrock function
+        evalResult.objGrad = self.test_grad(x)
+        return 0
+
     # Rosenbrock function
     def test_fun(self, x):
         return 100 * (x[1] - x[0] ** 2) ** 2 + (1 - x[0]) ** 2

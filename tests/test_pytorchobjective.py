@@ -63,19 +63,7 @@ def test_pytorch_obj():
 
     check_gradient = check_grad(obj.fun, obj.grad, obj.x0)
     assert check_gradient < 1e-6
-
-    print(xL)
-    f_val = obj.fun(obj.x0)
-    grad_val = obj.grad(obj.x0)
-
-    print("minimizing the objective function is:", obj.fun(xL.x))
-
-    print(grad_val)
-
-    # assert_almost_equal(f_val, 0.3102050451060238)
-    # assert_array_almost_equal(
-    #     grad_val, [0.09091323, 0.09091323, 0.55696054, 0.55696054, 1.11392108]
-    # )
+    
     assert 1 == 1
 
 
