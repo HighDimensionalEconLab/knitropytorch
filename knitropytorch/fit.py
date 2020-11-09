@@ -58,7 +58,7 @@ def fit_knitro(
     nStatus = KN_solve(kc)
     xL = Solution(kc)
     KN_free(kc)
-    
+
     t1 = time.time()
 
     # cache final x and reconstitute model
