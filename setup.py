@@ -8,7 +8,7 @@ from runpy import run_path
 from setuptools import find_packages, setup
 
 # read the program version from version.py (without loading the module)
-__version__ = run_path("src/knitropytorch/version.py")["__version__"]
+__version__ = run_path("knitropytorch/version.py")["__version__"]
 
 
 def read(fname):
