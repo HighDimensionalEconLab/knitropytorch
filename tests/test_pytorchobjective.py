@@ -158,6 +158,6 @@ def test_knitro():
     nStatus = KN_solve(kc)
     sol = Solution(kc)
 
-    #The objective that scipy optimizer returns is around 0.005
+    # The objective that scipy optimizer returns is around 0.005
     assert sol.obj - 0.005 < 0.001
     KN_free(kc)
