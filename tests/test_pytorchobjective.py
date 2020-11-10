@@ -61,67 +61,17 @@ def test_pytorch_obj():
     xL = minimize(obj.fun, obj.x0, method="BFGS", jac=obj.grad)
     obj.cache_argument(xL.x)
 
-    # check_gradient = check_grad(obj.test_fun, obj.test_grad, obj.x0)
-    # assert check_gradient < 1e-6
+    check_gradient = check_grad(obj.fun, obj.grad, obj.x0)
+    assert check_gradient < 1e-6
 
     assert 1 == 1
 
     print(xL)
 
 
-# class TestWrappers:
-#     def test_eval_f(self, kc, cb, evalRequest, evalResult, userParams):
-#         if evalRequest.type != KN_RC_EVALFC:
-#             print(
-#                 "*** callbackEvalF incorrectly called with eval type %d"
-#                 % evalRequest.type
-#             )
-#             return -1
-#         x = evalRequest.x
-#         # here x is a list of size 1
-#         # Evaluate nonlinear objective
-#         evalResult.obj = self.fun(x[0])
-#         return 0
-
-#     def test_eval_g(self, kc, cb, evalRequest, evalResult, userParams):
-#         if evalRequest.type != KN_RC_EVALGA:
-#             print(
-#                 "*** callbackEvalGA incorrectly called with eval type %d"
-#                 % evalRequest.type
-#             )
-#             return -1
-#         x = evalRequest.x
-#         print(x)
-#         # Evaluate nonlinear objective
-#         evalResult.objGrad[0] = self.grad(x[0])
-#         return 0
-
-#     def fun(self, x):
-#         return x * x
-
-#     def grad(self, x):
-#         return 2 * x
-
-
-# def test_fake_class_knitro():
-#     try:
-#         kc = KN_new()
-#     except:
-#         print("Failed to find a valid license.")
-#         quit()
-#     KN_add_vars(kc, 1)
-#     fake_inst = TestWrappers()
-#     # KN_set_var_primal_init_values (kc, xInitVals = [.5])
-#     cb = KN_add_eval_callback(kc, evalObj=True, funcCallback=fake_inst.test_eval_f)
-#     KN_set_cb_grad(
-#         kc, cb, objGradIndexVars=KN_DENSE, gradCallback=fake_inst.test_eval_g
-#     )
-#     KN_set_int_param(kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_ALL)
-#     nStatus = KN_solve(kc)
-
-#     assert 1 == 1
-
-
+# This is a simple test for knitro. nn and obj are defined like previous test, however this test 
+# does not use any of these structure. This test calls a simple quadratic functions from  PyTorchObjective for 
+# objective and gradient. 
 def test_knitro_simple():
     net = nn.Sequential(
         OrderedDict(
@@ -152,18 +102,12 @@ def test_knitro_simple():
         print("Failed to find a valid license.")
         quit()
 
-    # KN_add_vars(kc, 5)
-
-    # uncomment for the Rosenbrock function
     KN_add_vars (kc, 2)
 
-    # KN_set_var_primal_init_values(kc, xInitVals=obj.x0)
-    # uncomment for the Rosenbrock function
     KN_set_var_primal_init_values (kc, xInitVals = [4, 5])
     cb = KN_add_eval_callback(kc, evalObj=True, funcCallback=obj.eval_f_test)
     KN_set_cb_grad(kc, cb, objGradIndexVars=KN_DENSE, gradCallback=obj.eval_g_test)
     KN_set_obj_goal(kc, KN_OBJGOAL_MINIMIZE)
-    # KN_set_int_param(kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_FIRST)
     nStatus = KN_solve(kc)
     sol = Solution(kc)
 
@@ -225,6 +169,3 @@ def test_knitro():
 
 
 
-# test_pytorch_obj()
-# # test_fake_class_knitro()
-# test_knitro()
