@@ -7,7 +7,6 @@ from functools import (
 )  # param_len = reduce(lambda x, y: x * y, self.param_shapes[n])
 from collections import OrderedDict
 
-
 def cycle_no_storage(iterable):
     """
     Takes an existing iterator and makes it repeat itself.
@@ -184,12 +183,9 @@ class PyTorchObjective:  # not (object), since that's implied in Python 3
             )
             return -1
         x = evalRequest.x
-        # print(x)
         # Evaluate nonlinear objective
         evalResult.obj = self.fun(np.array(x))
 
-        # Evaluating the Rosenbrock function
-        # evalResult.obj = self.test_fun(x)
         return 0
 
     def eval_g(self, kc, cb, evalRequest, evalResult, userParams):
@@ -200,12 +196,9 @@ class PyTorchObjective:  # not (object), since that's implied in Python 3
             )
             return -1
         x = evalRequest.x
-        # print("input of x is ", x)
         # Evaluate nonlinear objective
         evalResult.objGrad = self.grad(np.array(x))
 
-        # Evaluating the Rosenbrock function
-        # evalResult.objGrad = self.test_grad(x)
         return 0
 
 
@@ -237,10 +230,9 @@ class PyTorchObjective:  # not (object), since that's implied in Python 3
 
     # Rosenbrock function
     def test_fun(self, x):
-        return 100 * (x[1] - x[0] ** 2) ** 2 + (1 - x[0]) ** 2
+        return x[0]**2 + x[1]**2
 
     def test_grad(self, x):
-        grad0 = 400 * x[0] ** 3 - 400 * x[0] * x[1] - 2 * x[0] - 2
-        grad1 = 200 * (x[1] - x[0] ** 2)
-
+        grad0 = 2 * x[0]
+        grad1 = 2 * x[1]
         return np.array([grad0, grad1])
