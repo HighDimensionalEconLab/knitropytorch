@@ -7,6 +7,7 @@ from functools import (
 )  # param_len = reduce(lambda x, y: x * y, self.param_shapes[n])
 from collections import OrderedDict
 
+
 def cycle_no_storage(iterable):
     """
     Takes an existing iterator and makes it repeat itself.
@@ -201,7 +202,6 @@ class PyTorchObjective:  # not (object), since that's implied in Python 3
 
         return 0
 
-
     def eval_f_test(self, kc, cb, evalRequest, evalResult, userParams):
         if evalRequest.type != KN_RC_EVALFC:
             print(
@@ -230,7 +230,7 @@ class PyTorchObjective:  # not (object), since that's implied in Python 3
 
     # Rosenbrock function
     def test_fun(self, x):
-        return x[0]**2 + x[1]**2
+        return x[0] ** 2 + x[1] ** 2
 
     def test_grad(self, x):
         grad0 = 2 * x[0]

@@ -72,7 +72,6 @@ def fit_knitro(
 ):
 
     # print("x_old0", old_obj.x0)
-   
 
     if validate_loader is None:
         validate_loader = train_loader
@@ -91,7 +90,7 @@ def fit_knitro(
         log_epoch=log_epoch,
         epoch_log_frequency=epoch_log_frequency,
     )
-    print("x_new0" ,obj.x0)
+    print("x_new0", obj.x0)
 
     # maxiter = max_epochs * len(train_loader)  # len is batches per epoch
     # options.update({"maxiter": maxiter})
@@ -99,7 +98,7 @@ def fit_knitro(
     t0 = time.time()
     xL = knitro_minimize(obj)
 
-    #using optimize function
+    # using optimize function
     # variables = Variables(nV=len(obj.x0),
     #                     # xLoBnds=[-1.0] * len(obj.x0), # not necessary since infinite
     #                     # xUpBnds=[1.0] * len(obj.x0),
@@ -128,8 +127,8 @@ def fit_knitro(
     if not log_final is None:
         log_final(writer, model, validation_data)
 
-
     return obj, xL, t1 - t0
+
 
 # Wrapper function for knitro optimizer
 def knitro_minimize(obj):
@@ -139,7 +138,7 @@ def knitro_minimize(obj):
         print("Failed to find a valid license.")
         quit()
     KN_add_vars(kc, len(obj.x0))
-    print("initial values",KN_set_var_primal_init_values(kc, xInitVals=obj.x0))
+    print("initial values", KN_set_var_primal_init_values(kc, xInitVals=obj.x0))
     cb = KN_add_eval_callback(kc, evalObj=True, funcCallback=obj.eval_f)
 
     # cb = KN_add_eval_callback (kc, evalObj = True, funcCallback = obj.callbackEvalFCGA)
