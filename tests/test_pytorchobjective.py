@@ -113,10 +113,10 @@ def test_knitro_simple():
 
     assert_array_almost_equal(sol.x, np.array([0.0, 0.0]))
 
-    print(nStatus)
+    # print(nStatus)
 
-    print("objective is", sol.obj)
-    print("x is", sol.x)
+    # print("objective is", sol.obj)
+    # print("x is", sol.x)
     KN_free(kc)
 
 
@@ -157,11 +157,6 @@ def test_knitro():
     # KN_set_int_param(kc, KN_PARAM_DERIVCHECK, KN_DERIVCHECK_FIRST)
     nStatus = KN_solve(kc)
     sol = Solution(kc)
-
-    print(sol.x)
-    # assert_array_almost_equal(sol.x, np.array([0.0, 0.0]))
-
-    print(nStatus)
 
     #The objective that scipy optimizer returns is around 0.005
     assert sol.obj - 0.005 < 0.001
