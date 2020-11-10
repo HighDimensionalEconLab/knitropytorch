@@ -12,4 +12,4 @@ from .version import __version__
 
 # actual project stuff
 from .PyTorchObjective import *
-from .fit import *
+from .fit import fit_knitro, fit_scipy
