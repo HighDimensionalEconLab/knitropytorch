@@ -69,9 +69,9 @@ def test_pytorch_obj():
     print(xL)
 
 
-# This is a simple test for knitro. nn and obj are defined like previous test, however this test 
-# does not use any of these structure. This test calls a simple quadratic functions from  PyTorchObjective for 
-# objective and gradient. 
+# This is a simple test for knitro. nn and obj are defined like previous test, however this test
+# does not use any of these structure. This test calls a simple quadratic functions from  PyTorchObjective for
+# objective and gradient.
 def test_knitro_simple():
     net = nn.Sequential(
         OrderedDict(
@@ -102,9 +102,9 @@ def test_knitro_simple():
         print("Failed to find a valid license.")
         quit()
 
-    KN_add_vars (kc, 2)
+    KN_add_vars(kc, 2)
 
-    KN_set_var_primal_init_values (kc, xInitVals = [4, 5])
+    KN_set_var_primal_init_values(kc, xInitVals=[4, 5])
     cb = KN_add_eval_callback(kc, evalObj=True, funcCallback=obj.eval_f_test)
     KN_set_cb_grad(kc, cb, objGradIndexVars=KN_DENSE, gradCallback=obj.eval_g_test)
     KN_set_obj_goal(kc, KN_OBJGOAL_MINIMIZE)
@@ -161,6 +161,3 @@ def test_knitro():
     #The objective that scipy optimizer returns is around 0.005
     assert sol.obj - 0.005 < 0.001
     KN_free(kc)
-
-
-
